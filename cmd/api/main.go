@@ -10,7 +10,7 @@ import (
 
 	log "github.com/magna5/go-logger"
 
-	"../../api"
+	"github.com/magna5/lm2cw/api"
 )
 
 var Version = "dev"

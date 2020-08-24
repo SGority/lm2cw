@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"../util"
+	"github.com/magna5/lm2cw/util"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 )

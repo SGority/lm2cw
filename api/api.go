@@ -10,7 +10,7 @@ import (
 	"net/http"
 	"time"
 
-	"../models"
+	"github.com/magna5/lm2cw/models"
 	sentryhttp "github.com/getsentry/sentry-go/http"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
