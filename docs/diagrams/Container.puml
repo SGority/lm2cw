@@ -1,0 +1,24 @@
+@startuml
+
+!include <c4/C4_Container.puml>
+!include <office/Users/user.puml>
+!include <office/Databases/database_availability_group.puml>
+!include <logos/go.puml>
+
+LAYOUT_WITH_LEGEND()
+
+title LM2CW Container Diagram
+
+System_Ext(lm, LogicMonitor, Monitors devices for customers)
+System_Boundary(lm2cw, LM2CW) {
+    Container(app, LM2CW, "golang", "Updates Connectwise with LogicMonitor Devices")
+
+}
+System_Ext(prom, Prometheus, "Stores application metrics")
+System_Ext(cw, Connectwise, Billing system for Managed Services)
+
+Rel_L(app, lm, "Pulls list of devices", HTTPS)
+Rel_R(app, cw, "Pushes updates devices", HTTPS)
+Rel_U(prom, app, "Pulls performance and error metrics")
+
+@enduml

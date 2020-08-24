@@ -1,0 +1,19 @@
+@startuml
+
+!include <c4/C4_Component.puml>
+!include <office/Users/user.puml>
+!include <office/Databases/database_availability_group.puml>
+!include <logos/go.puml>
+
+LAYOUT_WITH_LEGEND()
+
+title LM2CW Component Diagram
+
+Container_Boundary(lm2cw, "LM2CW App") {
+    Component(metrics, "Metrics endpoint", "GET /metrics: promhttp.Handler()", "Endpoint for pulling the current metrics")
+}
+
+System_Ext(prom, Prometheus, "Stores application metrics")
+
+Rel_R(prom, metrics, "Pulls application metrics")
+@enduml
