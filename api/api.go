@@ -10,12 +10,14 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/magna5/lm2cw/models"
 	sentryhttp "github.com/getsentry/sentry-go/http"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/render"
+	"github.com/go-co-op/gocron"
+	"github.com/magna5/lm2cw/models"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/rs/cors"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/hlog"
 	"github.com/rs/zerolog/log"
@@ -68,6 +70,16 @@ func NewServer(ctx context.Context, cfg *Cfg) (*server, error) {
 	// 	},
 	// 	SigningMethod: jwt.SigningMethodRS256,
 	// })
+
+	r.Use(cors.New(cors.Options{
+		AllowedOrigins:     []string{"*"},
+		AllowedMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:     []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposedHeaders:     []string{"Link"},
+		AllowCredentials:   true,
+		OptionsPassthrough: false,
+		MaxAge:             3599, // Maximum value not ignored by any of major browsers
+	}).Handler)
 
 	r.Handle("/metrics", promhttp.Handler())
 
@@ -132,4 +144,24 @@ func ping(w http.ResponseWriter, r *http.Request) {
 
 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	s.root.ServeHTTP(w, r)
+}
+
+// ExecuteScheduler defines a new scheduler that schedules and runs jobs.
+// The default value for jobInterval is set to 180.
+func ExecuteScheduler(cfg *Cfg) {
+	job := gocron.NewScheduler(time.UTC)
+	job.Every(cfg.JobInterval).Minutes().Do(LM2CW, cfg)
+	job.StartAsync()
+}
+
+func setTimeMetrics(status string, startTime time.Time, cfg *Cfg) {
+	LastSyncTime.WithLabelValues(status).Set(float64(startTime.Unix()))
+
+	currentTime := time.Now()
+	duration := currentTime.Sub(startTime)
+	LastSyncDuration.Set(float64(duration))
+
+	interval := time.Duration(int64(cfg.JobInterval))
+	nextRunTime := currentTime.Add(time.Minute * interval)
+	NextSyncTime.Set(float64(nextRunTime.Unix()))
 }

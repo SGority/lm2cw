@@ -26,6 +26,76 @@ var (
 		[]string{"code", "method", "endpoint"})
 )
 
+// ErrorCounter exposes error count
+var (
+	ErrorCounter = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "error_counter",
+		Help: "Total error count.",
+	},
+	)
+)
+
+//DevicesSynchronizedGauge exposes devices synchronized
+var (
+	DevicesSynchronizedGauge = promauto.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "devices_synchronized_gauge",
+			Help: "Number of devices synchronized.",
+		},
+		[]string{"company"},
+	)
+)
+
+// LastSyncTime exposes the last time when the devices where synched
+var (
+	LastSyncTime = promauto.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "last_sync_time",
+		Help: "Last time when devices where synched.",
+	},
+		[]string{"status"},
+	)
+)
+
+// LastSyncDuration exposes the duration of the last sync
+var (
+	LastSyncDuration = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "last_sync_duration",
+		Help: "Time taken when last time the devices were synched.",
+	},
+	)
+)
+
+// NextSyncTime exposes the next time for synching devices
+var (
+	NextSyncTime = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "next_sync_time",
+		Help: "Next time the devices would be synched.",
+	},
+	)
+)
+
+//Add the devices which do not have company name set
+var (
+	CompanyNotSet = promauto.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "not_synced_no_company",
+			Help: "Number of devices which do not have company name set.",
+		},
+		[]string{"device"},
+	)
+)
+
+//Add the devices for which company name was not found in connectwise
+var (
+	CompanyNotFound = promauto.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "not_synced_company_not_found",
+			Help: "Number of devices for which company was not found in connectwise.",
+		},
+		[]string{"company"},
+	)
+)
+
 // mwMetrics is simple middleware to count ongoing requests.
 func mwMetrics(next http.Handler) http.Handler {
 	f := func(w http.ResponseWriter, r *http.Request) {

@@ -5,28 +5,20 @@ info:
     description: REST API
     license:
         name: MIT License
-        url: 'https://opensource.org/licenses/MIT'
+        url: "https://opensource.org/licenses/MIT"
 paths:
-    /test:
-        summary: test api
+    /sync_devices:
+        summary: Sync devices
         get:
-            parameters:
-                -
-                    name: id
-                    description: pass an id
-                    schema:
-                        type: integer
-                    in: query
-                    required: true
             responses:
-                '200':
+                "200":
                     description: success
-                '500':
-                    $ref: '#/components/responses/Error'
+                "500":
+                    $ref: "#/components/responses/Error"
             security:
                 - JWT:
-                  - exec_test
-            summary: Test
+                      - exec_test
+            summary: Sync devices
 components:
     schemas:
         ErrResponse:
@@ -51,8 +43,8 @@ components:
             content:
                 application/json:
                     schema:
-                        $ref: '#/components/schemas/ErrResponse'
-            description: ''
+                        $ref: "#/components/schemas/ErrResponse"
+            description: ""
     securitySchemes:
         JWT:
             scheme: bearer

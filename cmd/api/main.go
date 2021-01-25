@@ -31,6 +31,10 @@ func main() {
 		}
 		api.RefreshJWTKS(cfg)
 	}
+
+	// Run scheduler
+	api.ExecuteScheduler(cfg)
+
 	// create server instance
 	s, err := api.NewServer(context.Background(), cfg)
 	if err != nil {

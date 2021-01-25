@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h3>The following devices did not have the company_name set:</h3>
+<ul>
+    {{if not .Devices}} No Devices Found 
+    {{ else }}  
+        {{range .Devices}}
+            </li>ID: {{.ID}}, Name: {{.Name}}</li></br>
+        {{end}}
+    {{end}}
+</ul>
+   
+<h3>The following companies were not found in connectwise :</h3>   
+<ul>
+    {{if not .CompanyNames}} Not Found 
+    {{ else }}  
+        {{range .CompanyNames}}
+            </li>{{.}}</li></br>
+        {{end}}
+    {{end}}
+</ul>
+</body>
+</html>
+

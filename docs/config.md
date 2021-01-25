@@ -11,10 +11,24 @@ The order of preference is:
 
 ## Configuration Variables and Flags
 
-Variable | Flag | Default | Description |
--------  | ---- | ------- | -----------
-SENTRY_DSN |  |  | DSN for sentry crash detection
-SENTRY_ENVIRONMENT |  |  | Environment to report to sentry
-PORT | -p,<br/> --port  | 8080  | HTTP Port on which to listen
-JWKS_RENEW_MINUTES | | 60 | Number of minutes between JWKS certificate renewals
-JWT_ISSUER | | | The URL to the JWT issuing server
+| Variable           | Flag            | Default | Description                                                         |
+| ------------------ | --------------- | ------- | ------------------------------------------------------------------- |
+| PORT               | -p,<br/> --port | 8080    | The port on which the service listens                               |
+| JWKS_RENEW_MINUTES |                 | 60      | Number of minutes to wait before renewing JWKS certificates         |
+| JWT_ISSUER         |                 |         | The URL to the JWT issuing server                                   |
+| JOB_INTERVAL       |                 | 180     | The interval at which the scheduler is invoked Specified in minutes |
+| CW_USER            |                 |         | The username required for connectwise authentication                |
+| CW_PASS            |                 |         | The password required for connectwise authentication                |
+| CW_URL             |                 |         | The connectwise url                                                 |
+| CW_COMPANY         |                 |         | The company name in connectwise                                     |
+| CW_COMPANY_ID      |                 |         | The company ID for connectwise                                      |
+| BASE_URL           |                 |         | The base URL used in making request to logicmonitor                 |
+| LM_ACCESS_ID       |                 |         | The access id required for logicmonitor authentication              |
+| LM_ACCESS_KEY      |                 |         | The access key required for logicmonitor authentication             |
+| DEVICE_SOURCE_PATH |                 |         | The resource path                                                   |
+| OFFSET_SIZE        |                 | 100     | The offset size when fetching any resources            |
+| SMTP_HOST           |                 |         |SMTP host|
+| SMTP_PORT           |                 | 587     |SMTP port|
+| MAIL_TO             |                 |         |Mail address of the recipient to whom the mail is being sent.|
+| MAIL_FROM           |                 |         |Mail address of the sender.|
+| MAIL_PASS           |                 |         |Password of the sender.|

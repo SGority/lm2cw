@@ -17,7 +17,7 @@ func (e *ErrResponse) Render(w http.ResponseWriter, r *http.Request) error {
 }
 
 func ErrInvalidRequest(r *http.Request, err error) render.Renderer {
-	hlog.FromRequest(r).Error().Err(err).Send()
+	hlog.FromRequest(r).Error().Err(err)
 	reqID, _ := hlog.IDFromRequest(r)
 	return &ErrResponse{
 		HTTPStatusCode: http.StatusBadRequest,
@@ -27,7 +27,7 @@ func ErrInvalidRequest(r *http.Request, err error) render.Renderer {
 }
 
 func ErrNotFound(r *http.Request, err error) render.Renderer {
-	hlog.FromRequest(r).Error().Err(err).Send()
+	hlog.FromRequest(r).Error().Err(err)
 	reqID, _ := hlog.IDFromRequest(r)
 	return &ErrResponse{
 		HTTPStatusCode: http.StatusNotFound,
@@ -37,7 +37,7 @@ func ErrNotFound(r *http.Request, err error) render.Renderer {
 }
 
 func ErrUnauthorized(r *http.Request, err error) render.Renderer {
-	hlog.FromRequest(r).Error().Err(err).Send()
+	hlog.FromRequest(r).Error().Err(err)
 	reqID, _ := hlog.IDFromRequest(r)
 
 	return &ErrResponse{
@@ -48,7 +48,7 @@ func ErrUnauthorized(r *http.Request, err error) render.Renderer {
 }
 
 func ErrServerError(r *http.Request, err error) render.Renderer {
-	hlog.FromRequest(r).Error().Err(err).Send()
+	hlog.FromRequest(r).Error().Err(err)
 	reqID, _ := hlog.IDFromRequest(r)
 	return &ErrResponse{
 		HTTPStatusCode: http.StatusInternalServerError,
@@ -57,7 +57,7 @@ func ErrServerError(r *http.Request, err error) render.Renderer {
 	}
 }
 func ErrorEncoder(ctx context.Context, err error, w http.ResponseWriter) {
-	log.Ctx(ctx).Error().Err(err).Send()
+	log.Ctx(ctx).Error().Err(err)
 	reqID, _ := hlog.IDFromCtx(ctx)
 	w.Header().Set("Content-Type", "application/json")
 	if headerer, ok := err.(openapi3filter.Headerer); ok {
