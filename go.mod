@@ -11,7 +11,8 @@ require (
 	github.com/getsentry/sentry-go v0.7.0
 	github.com/go-chi/chi v4.1.2+incompatible
 	github.com/go-chi/render v1.0.1
-	github.com/go-co-op/gocron v0.3.0
+	github.com/go-co-op/gocron v0.5.1
+	github.com/go-redis/redis v6.15.5+incompatible // indirect
 	github.com/go-test/deep v1.0.7
 	github.com/gobuffalo/buffalo v0.16.15
 	github.com/gomicro/postal v0.0.1

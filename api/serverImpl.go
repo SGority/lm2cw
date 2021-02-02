@@ -276,7 +276,17 @@ func AddOrUpdate(conf *Cfg, devname, compname string, data, updata map[string]in
 
 	if len(config) != 0 && config[0].Comp.Name == compname {
 		id := strconv.Itoa(config[0].ID)
-		jsonData, err := json.Marshal(updata)
+
+		patchMap := []map[string]interface{}{}
+
+		for key, value := range updata {
+			patchData := map[string]interface{}{"op": "replace",
+				"path":  key,
+				"value": value}
+			patchMap = append(patchMap, patchData)
+		}
+
+		jsonData, err := json.Marshal(patchMap)
 		if err != nil {
 			log.Error(err)
 			return nil, err
@@ -319,8 +329,8 @@ func setCWAttributes(lmap map[string]interface{}) map[string]interface{} {
 		CWAttributes["modelNumber"] = res["system.model"]
 		CWAttributes["type"] = res["cw_type"]
 		CWAttributes["notes"] = res["description"]
-		CWAttributes["osInfo"] = res["system.sysInfo"]
-		CWAttributes["company"] = res["company_name"]
+		CWAttributes["osInfo"] = res["system.sysinfo"]
+		CWAttributes["company"] = res["customer.name"]
 		if res["system.ips"] != nil {
 			cwIP := (res["system.ips"]).(string)
 			ipvalue := strings.Split(cwIP, ",")
@@ -336,6 +346,7 @@ func setCWAttributes(lmap map[string]interface{}) map[string]interface{} {
 }
 
 func updateAttributes(attrmap map[string]interface{}) map[string]interface{} {
+
 	UpAttributes := make(map[string]interface{})
 	UpAttributes["name"] = attrmap["name"]
 	UpAttributes["modelNumber"] = attrmap["modelNumber"]

@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strings"
 
 	log "github.com/magna5/go-logger"
 )
@@ -76,7 +77,15 @@ func getCwTypesByName(conf *Cfg, name string) ([]byte, error) {
 
 func getCwCompaniesByName(conf *Cfg, name string) ([]byte, error) {
 	client := &http.Client{}
-	encName := url.PathEscape(name)
+
+	var encName string
+	if strings.Contains(name, "&") {
+		compStr := strings.ReplaceAll(name, "&", "'&'")
+		encName = compStr
+	} else {
+		encName = url.PathEscape(name)
+	}
+
 	req, err := http.NewRequest(http.MethodGet, conf.CWURL+"/company/companies?conditions=name="+"'"+encName+"'", nil)
 	if err != nil {
 		log.Error(err)
