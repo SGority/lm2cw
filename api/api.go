@@ -106,7 +106,6 @@ func NewServer(ctx context.Context, cfg *Cfg) (*server, error) {
 		r.Use(mwMetrics)
 		r.Use(Recoverer)
 
-		r.Use(s.JWTAuthentication)
 		r.Use(sentryHandler.Handle)
 		r.Use(EventEnhancer)
 		handler := HandlerFromMux(s, r)

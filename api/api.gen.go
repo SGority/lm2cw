@@ -6,14 +6,12 @@ package api
 import (
 	"bytes"
 	"compress/gzip"
-	"context"
 	"encoding/base64"
 	"fmt"
-	"net/http"
-	"strings"
-
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/go-chi/chi"
+	"net/http"
+	"strings"
 )
 
 // ErrResponse defines model for ErrResponse.
@@ -32,25 +30,18 @@ type ErrResponse struct {
 // Error defines model for Error.
 type Error ErrResponse
 
-// ServerInterface represents all server handlers.
 type ServerInterface interface {
-	// Sync devices
-	// (GET /sync_devices)
+	// Sync devices (GET /sync_devices)
 	GetSyncDevices(w http.ResponseWriter, r *http.Request)
 }
 
-// ServerInterfaceWrapper converts contexts to parameters.
-type ServerInterfaceWrapper struct {
-	Handler ServerInterface
-}
-
 // GetSyncDevices operation middleware
-func (siw *ServerInterfaceWrapper) GetSyncDevices(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
+func GetSyncDevicesCtx(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
 
-	ctx = context.WithValue(ctx, "JWT.Scopes", []string{"exec_test"})
-
-	siw.Handler.GetSyncDevices(w, r.WithContext(ctx))
+		next.ServeHTTP(w, r.WithContext(ctx))
+	})
 }
 
 // Handler creates http.Handler with routing matching OpenAPI spec.
@@ -60,12 +51,9 @@ func Handler(si ServerInterface) http.Handler {
 
 // HandlerFromMux creates http.Handler with routing matching OpenAPI spec based on the provided mux.
 func HandlerFromMux(si ServerInterface, r chi.Router) http.Handler {
-	wrapper := ServerInterfaceWrapper{
-		Handler: si,
-	}
-
 	r.Group(func(r chi.Router) {
-		r.Get("/sync_devices", wrapper.GetSyncDevices)
+		r.Use(GetSyncDevicesCtx)
+		r.Get("/sync_devices", si.GetSyncDevices)
 	})
 
 	return r
@@ -74,14 +62,14 @@ func HandlerFromMux(si ServerInterface, r chi.Router) http.Handler {
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/3STwW7bMAyGX0XgdjTqYMMuug1rsGVYgaIxsEMQFKrMOupiSSPpokHgdx9kqV7WZDeZ",
-	"/PmJ/EUfwYY+Bo9eGPQRCDkGzzh9LIkCpYMNXtBLOpoY984accHXTxx8irHdYW/S6T3hI2h4V/+l1jnL",
-	"9ZLortBhHMcKWmRLLiYUaIAUKtpy+SzXxzfiqTP12ixUEClEJHG58W9Nc7sWIwN/Ce2F8maHKmlmgrJJ",
-	"V4EcIoIG5wU7JBgr6Lm7XN8js+lQ4UvcG+ed75TsUOHk2UxiIee7BCL8PSDL6voyrqSVa5UEJWTsr8zi",
-	"c1ihOcIW9GZq8ZRfvZ1/OxPCwxNayVajHcjJYZ0sz7Z9/9nMz5nUD2gIT4bZicT8dM4/hvM57pbrRn2+",
-	"XUEFe2exvJw3E+xm1agfJVrBQPsCZF3XIaLnMJDFq0BdXYq5vlk1yTpxsk+IjH5G4nzf4mpxtUiCVG+i",
-	"Aw0fp1AF0chumqnmg7f3LT47m4fscNrjtC7TFq9a0PAVZX3w9rrIqn//gw+LxfmwPFiLzOn6Tzl/afln",
-	"Tp1/plPnQW+K5xvAF7T3giywHbcV8ND3hg6gIbWlXtsf/58Zxz8BAAD//1EXhBvLAwAA",
+	"H4sIAAAAAAAC/3yTwY7UMAyGXyUyHKvJCMQlN8SOoBIrrXZ6QwiF1NtmaZNguytGo747SpstsDPiltq/",
+	"P/+J3TO4OKYYMAiDOQMhpxgYl48DUaR8cDEIBslHm9LgnRUfg37kGHKMXY+jzafXhA9g4JX+Q9VrlvWB",
+	"6L7QYZ7nClpkRz5lFBiAHCra0nyTm/ML8eJMPZuFChLFhCR+Nf6pae6OYmXiD7G9Ut70qLJmIyiXdRXI",
+	"KSEY8EGwQ4K5gpG76/UjMtsOFf5Kg/XBh05JjwqXN9tILORDl0GEPydkqW+u40pa+VZJVELW/VhZfAkr",
+	"NE/YgvmyWPybX728/9eNEL8/opP1+X14iJde7g/HRr2/q6GCwTssrx/smMtv60Z9LtEKJhrAQC+S2Ggd",
+	"EwaOEzncRep0KWZ9Wzf5+uJlyIgV/YTEa7/9br/bZ0Gut8mDgbdLqIJkpV/GqfkU3LcWn7xb59vhsot5",
+	"5Msm1i0Y+IhyPAV3U2TVv7v8Zr+/vCxPziFzbv9uzV9b4I2j1x9iWdRpHC2dwEDuqZ69/Sczz78DAAD/",
+	"/6WW0chsAwAA",
 }
 
 // GetSwagger returns the Swagger specification corresponding to the generated code

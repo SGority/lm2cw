@@ -14,19 +14,17 @@ The order of preference is:
 | Variable           | Flag            | Default | Description                                                         |
 | ------------------ | --------------- | ------- | ------------------------------------------------------------------- |
 | PORT               | -p,<br/> --port | 8080    | The port on which the service listens                               |
-| JWKS_RENEW_MINUTES |                 | 60      | Number of minutes to wait before renewing JWKS certificates         |
-| JWT_ISSUER         |                 |         | The URL to the JWT issuing server                                   |
-| JOB_INTERVAL       |                 | 180     | The interval at which the scheduler is invoked Specified in minutes |
+| JOB_INTERVAL       |                 | 180     | The interval at which the scheduler is invoked specified in minutes |
 | CW_USER            |                 |         | The username required for connectwise authentication                |
 | CW_PASS            |                 |         | The password required for connectwise authentication                |
-| CW_URL             |                 |         | The connectwise url                                                 |
+| CW_URL             |                |   https://na.myconnectwise.net/v4_6_release/apis/3.0       | The base url to connect to connectwise.                                               |
 | CW_COMPANY         |                 |         | The company name in connectwise                                     |
-| CW_COMPANY_ID      |                 |         | The company ID for connectwise                                      |
-| BASE_URL           |                 |         | The base URL used in making request to logicmonitor                 |
+| CW_COMPANY_ID      |                 |         | The company ID for connectwise authentication                                     |
+| BASE_URL           |                 |  https://magna5global.logicmonitor.com/santaba/rest       | The base URL used to connect to logicmonitor                 |
 | LM_ACCESS_ID       |                 |         | The access id required for logicmonitor authentication              |
 | LM_ACCESS_KEY      |                 |         | The access key required for logicmonitor authentication             |
-| DEVICE_SOURCE_PATH |                 |         | The resource path                                                   |
-| OFFSET_SIZE        |                 | 100     | The offset size when fetching any resources            |
+| DEVICE_SOURCE_PATH |                 |  /device/devices       | The path to fetch the device resource from Logicmonitor                                                  |
+| DEVICE_OFFSET_SIZE        |                 | 100     | The number of devices to return from logicmonitor           |
 | SMTP_HOST           |                 |         |SMTP host|
 | SMTP_PORT           |                 | 587     |SMTP port|
 | MAIL_TO             |                 |         |Mail address of the recipient to whom the mail is being sent.|

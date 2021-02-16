@@ -23,15 +23,6 @@ func main() {
 	// configurtion with viper
 	cfg := api.Configure(os.Args)
 
-	if issuer := cfg.JWTIssuer; issuer != "" {
-		// fetch JWT key set
-		err := api.FetchJWTKeySet(cfg)
-		if err != nil {
-			log.Fatal("failed to fetch JWT Key Set ", err)
-		}
-		api.RefreshJWTKS(cfg)
-	}
-
 	// Run scheduler
 	api.ExecuteScheduler(cfg)
 

@@ -15,9 +15,6 @@ paths:
                     description: success
                 "500":
                     $ref: "#/components/responses/Error"
-            security:
-                - JWT:
-                      - exec_test
             summary: Sync devices
 components:
     schemas:
@@ -44,8 +41,6 @@ components:
                 application/json:
                     schema:
                         $ref: "#/components/schemas/ErrResponse"
-            description: ""
-    securitySchemes:
-        JWT:
-            scheme: bearer
-            type: http
+            description: "An unknown error has occurred on the server.  Please see the
+                message in the response."
+    
