@@ -12,7 +12,10 @@ import (
 //SendMail func to send device info
 func SendMail(conf *Cfg, data Device) error {
 
-	auth := smtp.PlainAuth("", conf.MailFrom, conf.MailPass, conf.SMTPHost)
+	var auth smtp.Auth
+	if conf.MailPass == "" || conf.SMTPPort == "25" {
+		auth = smtp.PlainAuth("", conf.MailFrom, conf.MailPass, conf.SMTPHost)
+	}
 	t, err := template.ParseFiles("api/template.html")
 	if err != nil {
 		log.Error(err)
