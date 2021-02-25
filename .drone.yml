@@ -1,0 +1,68 @@
+kind: pipeline
+name: Deploy
+
+steps:
+- name: docker  
+  image: plugins/docker
+  settings:
+    auto_tag: true
+    dry_run: false
+    dockerfile: Dockerfile
+    repo: registry.m5.run/lm2cw
+    registry: registry.m5.run
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+
+- name: deploy
+  image: magna5/azuredeploy
+  environment:
+    MAIL_TO: helpdesk@magna5global.com
+    CW_USER: mbs9HRaqN4kyzFE5
+    CW_PASS: ZZ94VJaNWTBpN7rI
+    JOB_INTERVAL: 180    
+    CW_COMPANY: Magna5
+    CW_COMPANY_ID: c7b06b83-e581-4693-98eb-1aa250a65435
+    LM_ACCESS_ID: fWTk7rvkN8dqqaT3stPB
+    LM_ACCESS_KEY: 85pc+h2K9547}]cY8hNsR)^4%)x(9sc~4qdI(M+{
+    SMTP_HOST: smtp.magna5.cloud
+    SMTP_PORT: 25
+    MAIL_FROM: lm2cw@magna5.cloud
+
+  settings:
+    azure_appid:
+      from_secret: azure_appid
+    azure_password:
+      from_secret: azure_password
+    azure_tenant:
+      from_secret: azure_tenant
+    resource_group: Servers_Prod_West2
+    container_name: vc2cw
+    image_version: ${DRONE_SEMVER}
+    image: registry.m5.run/lm2cw
+    dns: lm2cw
+    ports: 8077
+    registry: registry.m5.run
+    registry_user:
+      from_secret: docker_username
+    registry_password:
+      from_secret: docker_password
+    envvars:
+      - CW_USER
+      - CW_PASS
+      - JOB_INTERVAL
+      - CW_COMPANY
+      - CW_COMPANY_ID
+      - LM_ACCESS_ID
+      - LM_ACCESS_KEY
+      - SMTP_HOST
+      - SMTP_PORT
+      - MAIL_FROM
+      - MAIL_TO
+
+trigger:
+  branch:
+    - master
+  event:
+    - tag
