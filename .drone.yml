@@ -42,7 +42,7 @@ steps:
     image_version: ${DRONE_SEMVER}
     image: registry.m5.run/lm2cw
     dns: lm2cw
-    ports: 8077
+    ports: 8080
     registry: registry.m5.run
     registry_user:
       from_secret: docker_username
