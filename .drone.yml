@@ -38,7 +38,7 @@ steps:
     azure_tenant:
       from_secret: azure_tenant
     resource_group: Servers_Prod_West2
-    container_name: vc2cw
+    container_name: lm2cw
     image_version: ${DRONE_SEMVER}
     image: registry.m5.run/lm2cw
     dns: lm2cw
