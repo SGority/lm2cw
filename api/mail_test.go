@@ -1,32 +1,15 @@
 package api
 
 import (
-	"bytes"
-	"fmt"
-	"html/template"
+	"io"
 	"net/smtp"
+	"os"
+	"path/filepath"
 	"reflect"
 	"testing"
 
 	"github.com/gomicro/postal"
-	log "github.com/magna5/go-logger"
 )
-
-func mockSendMailBody(data Device) (bytes.Buffer, error) {
-	var body bytes.Buffer
-	t, _ := template.ParseFiles("template.html")
-
-	mimeHeaders := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
-	body.Write([]byte(fmt.Sprintf("Subject: LM to connectwise sync details \n%s\n\n", mimeHeaders)))
-
-	err := t.Execute(&body, data)
-	if err != nil {
-		log.Error(err)
-	}
-
-	return body, err
-
-}
 
 func TestSendMail(t *testing.T) {
 
@@ -136,9 +119,13 @@ func TestSendMail(t *testing.T) {
 
 	for _, testCase := range tableTest {
 		t.Run(testCase.name, func(t *testing.T) {
-			body, err := mockSendMailBody(testCase.device)
+
+			copyTempFile()
+			defer os.RemoveAll("templates")
+
+			body, err := loadTemplate(testCase.device)
 			if err != nil {
-				t.Error("Error occured")
+				t.Error("Error occured", err)
 			}
 			p := postal.New()
 			auth := smtp.PlainAuth("", cfg.MailFrom, cfg.MailPass, cfg.SMTPHost)
@@ -166,4 +153,31 @@ func TestSendMail(t *testing.T) {
 		})
 	}
 
+}
+
+func copyTempFile() error {
+	src, err := os.Open("../templates/mail.tmpl")
+	if err != nil {
+		return err
+	}
+	defer src.Close()
+
+	err = os.MkdirAll("templates", 0777)
+	if err != nil {
+		return err
+	}
+
+	destination := filepath.Join("templates", "mail.tmpl")
+
+	dest, err := os.Create(destination)
+	if err != nil {
+		return err
+	}
+	defer dest.Close()
+
+	_, err = io.Copy(dest, src)
+	if err != nil {
+		return err
+	}
+	return err
 }
