@@ -8,8 +8,8 @@ COPY . .
 
 RUN go build -v -o /bin/api /app/cmd/api
 
-FROM alpine
+FROM golang:1.13.7-buster
 COPY --from=0 /bin/api /bin/api
 RUN mkdir templates
 COPY templates/* templates/
-ENTRYPOINT ["api"]
+ENTRYPOINT ["/bin/api"]
