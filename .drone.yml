@@ -26,7 +26,7 @@ steps:
     CW_COMPANY_ID: c7b06b83-e581-4693-98eb-1aa250a65435
     LM_ACCESS_ID: fWTk7rvkN8dqqaT3stPB
     LM_ACCESS_KEY: 85pc+h2K9547}]cY8hNsR)^4%)x(9sc~4qdI(M+{
-    SMTP_HOST: smtp.magna5.cloud
+    SMTP_HOST: mxa-00325501.gslb.pphosted.com
     SMTP_PORT: 25
     MAIL_FROM: lm2cw@magna5.cloud
 
