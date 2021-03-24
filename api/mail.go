@@ -14,7 +14,7 @@ func SendMail(conf *Cfg, data Device) error {
 
 	var auth smtp.Auth
 	if conf.MailPass == "" || conf.SMTPPort == "25" {
-		auth = smtp.PlainAuth("", conf.MailFrom, conf.MailPass, conf.SMTPHost)
+		auth = nil
 	}
 
 	body, err := loadTemplate(data)
