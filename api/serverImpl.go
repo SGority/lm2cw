@@ -250,10 +250,12 @@ func CWAddUpdate(conf *Cfg, lmres []map[string]interface{}) error {
 		}
 	}
 
-	err := SendMail(conf, DevMail)
-	if err != nil {
-		log.Error(err)
-		return err
+	if DevMail.CompanyNames != nil || DevMail.Devices != nil {
+		err := SendMail(conf, DevMail)
+		if err != nil {
+			log.Error(err)
+			return err
+		}
 	}
 
 	return cwerr
