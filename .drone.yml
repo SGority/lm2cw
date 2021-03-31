@@ -18,7 +18,7 @@ steps:
 - name: deploy
   image: magna5/azuredeploy
   environment:
-    MAIL_TO: helpdesk@magna5global.com
+    MAIL_TO: itsupport@magna5global.com
     CW_USER: mbs9HRaqN4kyzFE5
     CW_PASS: ZZ94VJaNWTBpN7rI
     JOB_INTERVAL: 180    
