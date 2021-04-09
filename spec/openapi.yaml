@@ -7,11 +7,11 @@ info:
         name: MIT License
         url: "https://opensource.org/licenses/MIT"
 paths:
-    /sync_devices:
+    /sync:
         summary: Sync devices
         get:
             responses:
-                "200":
+                "202":
                     description: success
                 "500":
                     $ref: "#/components/responses/Error"

@@ -31,12 +31,12 @@ type ErrResponse struct {
 type Error ErrResponse
 
 type ServerInterface interface {
-	// Sync devices (GET /sync_devices)
-	GetSyncDevices(w http.ResponseWriter, r *http.Request)
+	// Sync devices (GET /sync)
+	GetSync(w http.ResponseWriter, r *http.Request)
 }
 
-// GetSyncDevices operation middleware
-func GetSyncDevicesCtx(next http.Handler) http.Handler {
+// GetSync operation middleware
+func GetSyncCtx(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 
@@ -52,8 +52,8 @@ func Handler(si ServerInterface) http.Handler {
 // HandlerFromMux creates http.Handler with routing matching OpenAPI spec based on the provided mux.
 func HandlerFromMux(si ServerInterface, r chi.Router) http.Handler {
 	r.Group(func(r chi.Router) {
-		r.Use(GetSyncDevicesCtx)
-		r.Get("/sync_devices", si.GetSyncDevices)
+		r.Use(GetSyncCtx)
+		r.Get("/sync", si.GetSync)
 	})
 
 	return r
@@ -62,14 +62,14 @@ func HandlerFromMux(si ServerInterface, r chi.Router) http.Handler {
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/3yTwY7UMAyGXyUyHKvJCMQlN8SOoBIrrXZ6QwiF1NtmaZNguytGo747SpstsDPiltq/",
-	"P/+J3TO4OKYYMAiDOQMhpxgYl48DUaR8cDEIBslHm9LgnRUfg37kGHKMXY+jzafXhA9g4JX+Q9VrlvWB",
-	"6L7QYZ7nClpkRz5lFBiAHCra0nyTm/ML8eJMPZuFChLFhCR+Nf6pae6OYmXiD7G9Ut70qLJmIyiXdRXI",
-	"KSEY8EGwQ4K5gpG76/UjMtsOFf5Kg/XBh05JjwqXN9tILORDl0GEPydkqW+u40pa+VZJVELW/VhZfAkr",
-	"NE/YgvmyWPybX728/9eNEL8/opP1+X14iJde7g/HRr2/q6GCwTssrx/smMtv60Z9LtEKJhrAQC+S2Ggd",
-	"EwaOEzncRep0KWZ9Wzf5+uJlyIgV/YTEa7/9br/bZ0Gut8mDgbdLqIJkpV/GqfkU3LcWn7xb59vhsot5",
-	"5Msm1i0Y+IhyPAV3U2TVv7v8Zr+/vCxPziFzbv9uzV9b4I2j1x9iWdRpHC2dwEDuqZ69/Sczz78DAAD/",
-	"/6WW0chsAwAA",
+	"H4sIAAAAAAAC/3STzW7bMAzHX0XgdjRio8MuuhVbsAVYgaDxbdhBk1lbrS1ppJwtCPzuA2XX3Zr0RvHj",
+	"R/4l8Qw2DDF49IlBn4GQY/CM+bAlCiSGDT6hT2KaGHtnTXLBl48cvPjYdjgYsd4TPoCGd+ULtZyjXG6J",
+	"7hc6TNNUQINsyUVBgYZbr0b/5MNvr1D6qs6wCtaORNio4FXqUDHSEWmj1L5Hw3LG7B+Q2bSo3Jz2rGID",
+	"0mcZYFG0zqDPrybIctdaKCBSiEjJzbfxta73h2TSyJ9Cc6W87lBJzkpQVvIKSKeIoMH5hC0STAUM3F6v",
+	"f9aBf2JvnHe+zXryhbyQOJHzrYAIf43Iaff5Om4JK9eoFFQiY59mFl/CFpojbEB/zyP+yy9e6/+xEsLP",
+	"R7RpflPnH8LlLPfbQ61u9zsooHcWl9v3ZpDyu12tvi3eAkbqQUOXUmRdliGi5zCSxU2gtlyKubzb1SI/",
+	"udQLYkYfkXjuV22qTSUJUm+iAw0fsquAaFKXn7Pkk7ditJg/tjx1/ta7BjR8wXSQePH/RtxUN5fqeLQW",
+	"maXfx6p6aw1WTjmvVf6Z4zAYOoEGaaYaPDqLGfRWZJr+BgAA//+49/aXsgMAAA==",
 }
 
 // GetSwagger returns the Swagger specification corresponding to the generated code

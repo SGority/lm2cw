@@ -19,3 +19,16 @@ The device synchronization
 1. Gets all devices from logicmonitor.
 2. Parse the devices to be used in connectwise.
 3. Add or update those device in connectwise.
+
+### Required Custom fields for LogicMonitor and/or Connectwise
+
+|Logic Monitor  | Connectwise 
+------------- | ------------- 
+|customer.name   | company 
+|cw_type  | type
+
+For the sync to be successful, the following must be true:
+
+* customer.name is set in LogicMonitor and the name exactly matches a company name in Connectwise
+* cw_type  has been set on the device in LogicMonitor.  The value *must* match a type in Connectwise
+* The `devicetype` in LogicMonitor *must* be 0
