@@ -29,6 +29,7 @@ steps:
     SMTP_HOST: mxa-00325501.gslb.pphosted.com
     SMTP_PORT: 25
     MAIL_FROM: lm2cw@magna5.cloud
+    SENTRY_DSN: https://68e90f6bdd31429492b518ad54c7d200@o347551.ingest.sentry.io/5713409
 
   settings:
     azure_appid:
@@ -60,6 +61,7 @@ steps:
       - SMTP_PORT
       - MAIL_FROM
       - MAIL_TO
+      - SENTRY_DSN
 
 trigger:
   branch:
