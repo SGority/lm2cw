@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.0.1](https://www.github.com/magna5/lm2cw/compare/v1.0.0...v1.0.1) (2021-04-09)
+
+
+### Bug Fixes
+
+* Minor logging tweaks ([c9501c4](https://www.github.com/magna5/lm2cw/commit/c9501c40de57f3719fe40e5eb75ffa8ce5813339))
+
 ## [1.0.0](https://www.github.com/magna5/lm2cw/compare/v0.1.6...v1.0.0) (2021-04-09)
 
 
