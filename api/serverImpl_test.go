@@ -3,6 +3,7 @@ package api
 import (
 	"net/http"
 	"net/http/httptest"
+	"reflect"
 	"testing"
 )
 
@@ -292,6 +293,37 @@ func TestCWAddUpdate(t *testing.T) {
 
 			if res != response {
 				t.Errorf("Response body was '%v'; want '%v'", response, res)
+			}
+		})
+	}
+}
+
+func Test_setCWAttributes(t *testing.T) {
+	type args struct {
+		lmap map[string]interface{}
+	}
+	tests := []struct {
+		name string
+		args args
+		want map[string]interface{}
+	}{
+		{name: "Test osType slicing < 250",
+			args: args{lmap: map[string]interface{}{
+				"system.sysinfo": "this is a short test",
+			}},
+			want: map[string]interface{}{
+				"osInfo":      "this is a short test",
+				"notes":       nil,
+				"company":     nil,
+				"name":        nil,
+				"modelNumber": nil,
+				"type":        nil},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := setCWAttributes(tt.args.lmap); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("setCWAttributes() = %v, want %v", got, tt.want)
 			}
 		})
 	}

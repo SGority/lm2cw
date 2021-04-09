@@ -373,9 +373,13 @@ func setCWAttributes(lmap map[string]interface{}) map[string]interface{} {
 		CWAttributes["modelNumber"] = res["system.model"]
 		CWAttributes["type"] = res["cw_type"]
 		CWAttributes["notes"] = res["description"]
-		CWAttributes["okInfo"] = ""
+		CWAttributes["osInfo"] = ""
 		if osInfo, ok := res["system.sysinfo"].(string); ok {
-			CWAttributes["osInfo"] = osInfo[:250]
+			if len(osInfo) > 250 {
+				CWAttributes["osInfo"] = osInfo[:250]
+			} else {
+				CWAttributes["osInfo"] = osInfo
+			}
 		}
 		CWAttributes["company"] = res["customer.name"]
 		if res["system.ips"] != nil {
