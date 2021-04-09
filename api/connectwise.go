@@ -3,6 +3,7 @@ package api
 import (
 	"bytes"
 	b64 "encoding/base64"
+	"errors"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -171,6 +172,10 @@ func addDeviceToCw(conf *Cfg, data []byte) ([]byte, error) {
 		log.Error(err)
 		return nil, err
 	}
+	if resp.StatusCode != 201 {
+		log.Error(resp.StatusCode, resp.Status)
+		err = errors.New(string(rbody))
+	}
 	return rbody, err
 }
 
@@ -200,6 +205,10 @@ func updateDeviceInCw(conf *Cfg, id string, body []byte) ([]byte, error) {
 		sentry.CaptureException(err)
 		log.Error(err)
 		return nil, err
+	}
+	if resp.StatusCode != 200 {
+		log.Error(resp.StatusCode, resp.Status)
+		err = errors.New(string(rbody))
 	}
 	return rbody, err
 }

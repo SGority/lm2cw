@@ -327,7 +327,6 @@ func AddOrUpdate(conf *Cfg, devname, compname string, data, updata map[string]in
 
 		res, err := updateDeviceInCw(conf, id, jsonData)
 		if err != nil {
-			sentry.CaptureException(err)
 			updlog.Error("Unable to update device", err)
 			ErrorCounter.Inc()
 			return res, err
@@ -343,7 +342,6 @@ func AddOrUpdate(conf *Cfg, devname, compname string, data, updata map[string]in
 
 		res, err := addDeviceToCw(conf, jsonData)
 		if err != nil {
-			sentry.CaptureException(err)
 			updlog.Error("Unable to add the device", err)
 			ErrorCounter.Inc()
 			return res, err
