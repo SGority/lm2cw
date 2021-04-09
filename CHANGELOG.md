@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.0.6](https://www.github.com/magna5/lm2cw/compare/v1.0.5...v1.0.6) (2021-04-09)
+
+
+### Bug Fixes
+
+* Only truncate osInfo when > 250 ([2cfd670](https://www.github.com/magna5/lm2cw/commit/2cfd6704cb71c2c3858ee866402e30b1d6ef9521))
+
 ### [1.0.5](https://www.github.com/magna5/lm2cw/compare/v1.0.4...v1.0.5) (2021-04-09)
 
 
