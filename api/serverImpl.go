@@ -196,14 +196,18 @@ func CWAddUpdate(conf *Cfg, lmres []map[string]interface{}) error {
 				if err != nil {
 					sentry.CaptureException(err)
 					llog.Error("Unable to get CW type response", err)
-					return err
+					ErrorCounter.Inc()
+					cwerr = err
+					continue
 				}
 
 				err = json.Unmarshal(getType, &cwtype)
 				if err != nil {
 					sentry.CaptureException(err)
 					llog.Error(err)
-					return err
+					ErrorCounter.Inc()
+					cwerr = err
+					continue
 				}
 
 				if len(cwtype) != 0 {
@@ -219,14 +223,18 @@ func CWAddUpdate(conf *Cfg, lmres []map[string]interface{}) error {
 						res, err := getCwCompaniesByName(conf, com)
 						if err != nil {
 							llog.Error("Unable to get CW company response", err)
-							return err
+							ErrorCounter.Inc()
+							cwerr = err
+							continue
 						}
 
 						err = json.Unmarshal(res, &comp)
 						if err != nil {
 							sentry.CaptureException(err)
 							llog.Error(err)
-							return err
+							ErrorCounter.Inc()
+							cwerr = err
+							continue
 						}
 						if len(comp) != 0 {
 
@@ -244,7 +252,9 @@ func CWAddUpdate(conf *Cfg, lmres []map[string]interface{}) error {
 							if err != nil {
 								llog.Error(err)
 								setTimeMetrics("error", startTime, conf)
-								return err
+								ErrorCounter.Inc()
+								cwerr = err
+								continue
 							}
 							setTimeMetrics("success", startTime, conf)
 							DevicesSynchronizedGauge.WithLabelValues(compName).Inc()
@@ -363,7 +373,7 @@ func setCWAttributes(lmap map[string]interface{}) map[string]interface{} {
 		CWAttributes["modelNumber"] = res["system.model"]
 		CWAttributes["type"] = res["cw_type"]
 		CWAttributes["notes"] = res["description"]
-		CWAttributes["osInfo"] = res["system.sysinfo"]
+		CWAttributes["osInfo"] = res["system.sysinfo"].(string)[:250]
 		CWAttributes["company"] = res["customer.name"]
 		if res["system.ips"] != nil {
 			cwIP := (res["system.ips"]).(string)
