@@ -239,6 +239,7 @@ func CWAddUpdate(conf *Cfg, lmres []map[string]interface{}) error {
 							upattr := updateAttributes(CWAttributes)
 							compName := comp[0].Name
 							deviceName := (CWAttributes["name"]).(string)
+							llog.Debug("Updating ConnectWise")
 							_, err := AddOrUpdate(conf, deviceName, compName, CWAttributes, upattr)
 							if err != nil {
 								llog.Error(err)
