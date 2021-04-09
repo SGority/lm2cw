@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.0.4](https://www.github.com/magna5/lm2cw/compare/v1.0.3...v1.0.4) (2021-04-09)
+
+
+### Bug Fixes
+
+* Truncate osInfo and prevent abort on error ([ed33ac6](https://www.github.com/magna5/lm2cw/commit/ed33ac615e8041333a19750aa0a0b710814f572b))
+
 ### [1.0.3](https://www.github.com/magna5/lm2cw/compare/v1.0.2...v1.0.3) (2021-04-09)
 
 
