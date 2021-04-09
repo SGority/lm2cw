@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.0.5](https://www.github.com/magna5/lm2cw/compare/v1.0.4...v1.0.5) (2021-04-09)
+
+
+### Bug Fixes
+
+* Truncate osInfo to 250 chars ([0973610](https://www.github.com/magna5/lm2cw/commit/09736109dce073c0fa7948f56632dd6f2528263e))
+
 ### [1.0.4](https://www.github.com/magna5/lm2cw/compare/v1.0.3...v1.0.4) (2021-04-09)
 
 
