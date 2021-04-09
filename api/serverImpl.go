@@ -180,6 +180,7 @@ func CWAddUpdate(conf *Cfg, lmres []map[string]interface{}) error {
 		CWAttributes := setCWAttributes(lmres[i])
 		llog := log.WithFields(map[string]interface{}{
 			"deviceType": deviceType,
+			"device":     CWAttributes["name"],
 			"company":    CWAttributes["company"],
 			"cw_type":    lmres[i]["cw_type"],
 		})
@@ -330,7 +331,7 @@ func AddOrUpdate(conf *Cfg, devname, compname string, data, updata map[string]in
 			ErrorCounter.Inc()
 			return res, err
 		}
-		log.Infof("Successfully updated device %s for %s\n", devname, compname)
+		updlog.Info("Successfully updated device")
 	} else {
 		jsonData, err := json.Marshal(data)
 		if err != nil {
@@ -346,7 +347,7 @@ func AddOrUpdate(conf *Cfg, devname, compname string, data, updata map[string]in
 			ErrorCounter.Inc()
 			return res, err
 		}
-		log.Infof("Successfully added device %s to %s\n", devname, compname)
+		updlog.Info("Successfully added device")
 	}
 
 	return res, err
