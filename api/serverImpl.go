@@ -178,6 +178,11 @@ func CWAddUpdate(conf *Cfg, lmres []map[string]interface{}) error {
 
 		//Set CW attributes
 		CWAttributes := setCWAttributes(lmres[i])
+		llog := log.WithFields(map[string]interface{}{
+			"deviceType": deviceType,
+			"company":    CWAttributes["company"],
+			"cw_type":    lmres[i]["cw_type"],
+		})
 
 		if deviceType.(float64) == 0 {
 
@@ -188,13 +193,15 @@ func CWAddUpdate(conf *Cfg, lmres []map[string]interface{}) error {
 				//check CW type
 				getType, err := getCwTypesByName(conf, tagName)
 				if err != nil {
-					log.Error("Unable to get CW type response", err)
+					sentry.CaptureException(err)
+					llog.Error("Unable to get CW type response", err)
 					return err
 				}
 
 				err = json.Unmarshal(getType, &cwtype)
 				if err != nil {
-					log.Error(err)
+					sentry.CaptureException(err)
+					llog.Error(err)
 					return err
 				}
 
@@ -210,13 +217,14 @@ func CWAddUpdate(conf *Cfg, lmres []map[string]interface{}) error {
 						com := (CWAttributes["company"]).(string)
 						res, err := getCwCompaniesByName(conf, com)
 						if err != nil {
-							log.Error("Unable to get CW company response", err)
+							llog.Error("Unable to get CW company response", err)
 							return err
 						}
 
 						err = json.Unmarshal(res, &comp)
 						if err != nil {
-							log.Error(err)
+							sentry.CaptureException(err)
+							llog.Error(err)
 							return err
 						}
 						if len(comp) != 0 {
@@ -232,13 +240,14 @@ func CWAddUpdate(conf *Cfg, lmres []map[string]interface{}) error {
 							deviceName := (CWAttributes["name"]).(string)
 							_, err := AddOrUpdate(conf, deviceName, compName, CWAttributes, upattr)
 							if err != nil {
-								log.Error(err)
+								llog.Error(err)
 								setTimeMetrics("error", startTime, conf)
 								return err
 							}
 							setTimeMetrics("success", startTime, conf)
 							DevicesSynchronizedGauge.WithLabelValues(compName).Inc()
 						} else {
+							llog.Warn("Company not found in Connectwise")
 							DevMail.CompanyNames = append(DevMail.CompanyNames, com)
 							CompanyNotFound.WithLabelValues(com).Inc()
 						}
@@ -248,12 +257,17 @@ func CWAddUpdate(conf *Cfg, lmres []map[string]interface{}) error {
 						DevDetails.Name = (lmres[i]["displayName"]).(string)
 						DevMail.Devices = append(DevMail.Devices, DevDetails)
 						CompanyNotSet.WithLabelValues(DevDetails.Name).Inc()
+						llog.Warnf("No company set for %s\n", DevDetails.Name)
 					}
 
+				} else { // len(cwtype == 0)
+					llog.Warn("Type not found in ConnectWise")
 				}
-
+			} else { // cw_type == nil
+				llog.Info("No cw_type specified, skipping")
 			}
-
+		} else { // deviceType != 0
+			llog.Info("DeviceType != 0, skipping")
 		}
 	}
 
@@ -272,17 +286,21 @@ func CWAddUpdate(conf *Cfg, lmres []map[string]interface{}) error {
 //AddOrUpdate func
 func AddOrUpdate(conf *Cfg, devname, compname string, data, updata map[string]interface{}) ([]byte, error) {
 	var config CwConfig
+	updlog := log.WithFields(map[string]interface{}{
+		"device":  devname,
+		"company": compname,
+	})
 	res, err := getCwConfigurationsByName(conf, devname)
 	if err != nil {
 		sentry.CaptureException(err)
-		log.Error("Unable to get the CW configuration response", err)
+		updlog.Error("Unable to get the CW configuration response", err)
 		return nil, err
 	}
 
 	err = json.Unmarshal(res, &config)
 	if err != nil {
 		sentry.CaptureException(err)
-		log.Error(err)
+		updlog.Error(err)
 		return nil, err
 	}
 
@@ -301,34 +319,34 @@ func AddOrUpdate(conf *Cfg, devname, compname string, data, updata map[string]in
 		jsonData, err := json.Marshal(patchMap)
 		if err != nil {
 			sentry.CaptureException(err)
-			log.Error(err)
+			updlog.Error(err)
 			return nil, err
 		}
 
 		res, err := updateDeviceInCw(conf, id, jsonData)
 		if err != nil {
 			sentry.CaptureException(err)
-			log.Error("Unable to update device", err)
+			updlog.Error("Unable to update device", err)
 			ErrorCounter.Inc()
 			return res, err
 		}
-		log.Info("Successfully updated the device")
+		log.Infof("Successfully updated device %s for %s\n", devname, compname)
 	} else {
 		jsonData, err := json.Marshal(data)
 		if err != nil {
 			sentry.CaptureException(err)
-			log.Error(err)
+			updlog.Error(err)
 			return nil, err
 		}
 
 		res, err := addDeviceToCw(conf, jsonData)
 		if err != nil {
 			sentry.CaptureException(err)
-			log.Error("Unable to add the device", err)
+			updlog.Error("Unable to add the device", err)
 			ErrorCounter.Inc()
 			return res, err
 		}
-		log.Info("Successfully added the device")
+		log.Infof("Successfully added device %s to %s\n", devname, compname)
 	}
 
 	return res, err
