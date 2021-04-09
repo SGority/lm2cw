@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.0.2](https://www.github.com/magna5/lm2cw/compare/v1.0.1...v1.0.2) (2021-04-09)
+
+
+### Bug Fixes
+
+* Add SENTRY_DSN ([b7c3ae9](https://www.github.com/magna5/lm2cw/commit/b7c3ae9488356e7bf42e142efc1ebea3d229ba5c))
+
 ### [1.0.1](https://www.github.com/magna5/lm2cw/compare/v1.0.0...v1.0.1) (2021-04-09)
 
 
