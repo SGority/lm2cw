@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.0.3](https://www.github.com/magna5/lm2cw/compare/v1.0.2...v1.0.3) (2021-04-09)
+
+
+### Bug Fixes
+
+* Check return status of CW calls ([ba331d9](https://www.github.com/magna5/lm2cw/commit/ba331d95902588be36fd11b04f5fcfce21b1f198))
+
 ### [1.0.2](https://www.github.com/magna5/lm2cw/compare/v1.0.1...v1.0.2) (2021-04-09)
 
 
