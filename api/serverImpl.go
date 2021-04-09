@@ -14,6 +14,7 @@ import (
 	"strings"
 	"time"
 
+	sentry "github.com/getsentry/sentry-go"
 	log "github.com/magna5/go-logger"
 )
 
@@ -85,6 +86,7 @@ func FetchDevices(conf *Cfg, page int64) ([]map[string]interface{}, error) {
 	url := fmt.Sprintf("%s%s?&offset=%d&size=%d", conf.BaseURL, conf.DeviceSourcePath, page*offset, offset)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
+		sentry.CaptureException(err)
 		return responseItems, err
 	}
 
@@ -99,21 +101,24 @@ func FetchDevices(conf *Cfg, page int64) ([]map[string]interface{}, error) {
 	resp, err := client.Do(req)
 
 	if err != nil {
+		sentry.CaptureException(err)
 		return responseItems, err
 	}
+	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
+		sentry.CaptureException(err)
 		return responseItems, err
 	}
 
 	responseItems, err = getDeviceItems(body)
 	if err != nil {
+		sentry.CaptureException(err)
 		return responseItems, err
 	}
 
 	responseItems = flattenDeviceItems(responseItems)
 
-	defer resp.Body.Close()
 	return responseItems, err
 }
 
@@ -131,6 +136,7 @@ func getDeviceItems(body []byte) ([]map[string]interface{}, error) {
 	var response map[string]interface{}
 	err := json.Unmarshal(body, &response)
 	if err != nil {
+		sentry.CaptureException(err)
 		return responseItems, nil
 	}
 
@@ -254,6 +260,7 @@ func CWAddUpdate(conf *Cfg, lmres []map[string]interface{}) error {
 	if DevMail.CompanyNames != nil || DevMail.Devices != nil {
 		err := SendMail(conf, DevMail)
 		if err != nil {
+			sentry.CaptureException(err)
 			log.Error(err)
 			return err
 		}
@@ -267,12 +274,14 @@ func AddOrUpdate(conf *Cfg, devname, compname string, data, updata map[string]in
 	var config CwConfig
 	res, err := getCwConfigurationsByName(conf, devname)
 	if err != nil {
+		sentry.CaptureException(err)
 		log.Error("Unable to get the CW configuration response", err)
 		return nil, err
 	}
 
 	err = json.Unmarshal(res, &config)
 	if err != nil {
+		sentry.CaptureException(err)
 		log.Error(err)
 		return nil, err
 	}
@@ -291,12 +300,14 @@ func AddOrUpdate(conf *Cfg, devname, compname string, data, updata map[string]in
 
 		jsonData, err := json.Marshal(patchMap)
 		if err != nil {
+			sentry.CaptureException(err)
 			log.Error(err)
 			return nil, err
 		}
 
 		res, err := updateDeviceInCw(conf, id, jsonData)
 		if err != nil {
+			sentry.CaptureException(err)
 			log.Error("Unable to update device", err)
 			ErrorCounter.Inc()
 			return res, err
@@ -305,12 +316,14 @@ func AddOrUpdate(conf *Cfg, devname, compname string, data, updata map[string]in
 	} else {
 		jsonData, err := json.Marshal(data)
 		if err != nil {
+			sentry.CaptureException(err)
 			log.Error(err)
 			return nil, err
 		}
 
 		res, err := addDeviceToCw(conf, jsonData)
 		if err != nil {
+			sentry.CaptureException(err)
 			log.Error("Unable to add the device", err)
 			ErrorCounter.Inc()
 			return res, err

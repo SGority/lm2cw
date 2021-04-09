@@ -8,6 +8,8 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/getsentry/sentry-go"
+
 	log "github.com/magna5/go-logger"
 )
 
@@ -55,6 +57,7 @@ func getCwTypesByName(conf *Cfg, name string) ([]byte, error) {
 	encName := url.PathEscape(name)
 	req, err := http.NewRequest(http.MethodGet, conf.CWURL+"/company/configurations/types?conditions=name="+"'"+encName+"'", nil)
 	if err != nil {
+		sentry.CaptureException(err)
 		log.Error(err)
 		return nil, err
 	}
@@ -63,15 +66,17 @@ func getCwTypesByName(conf *Cfg, name string) ([]byte, error) {
 	req.Header.Set("clientID", conf.CWCompanyID)
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Error(err)
-		return nil, err
-	}
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
+		sentry.CaptureException(err)
 		log.Error(err)
 		return nil, err
 	}
 	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		sentry.CaptureException(err)
+		log.Error(err)
+		return nil, err
+	}
 	return body, err
 }
 
@@ -88,6 +93,7 @@ func getCwCompaniesByName(conf *Cfg, name string) ([]byte, error) {
 
 	req, err := http.NewRequest(http.MethodGet, conf.CWURL+"/company/companies?conditions=name="+"'"+encName+"'", nil)
 	if err != nil {
+		sentry.CaptureException(err)
 		log.Error(err)
 		return nil, err
 	}
@@ -96,15 +102,17 @@ func getCwCompaniesByName(conf *Cfg, name string) ([]byte, error) {
 	req.Header.Set("clientID", conf.CWCompanyID)
 	resp, err := client.Do(req)
 	if err != nil {
+		sentry.CaptureException(err)
 		log.Fatal(err)
 		return nil, err
 	}
+	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
+		sentry.CaptureException(err)
 		log.Error(err)
 		return nil, err
 	}
-	defer resp.Body.Close()
 	return body, err
 }
 
@@ -113,6 +121,7 @@ func getCwConfigurationsByName(conf *Cfg, name string) ([]byte, error) {
 	encName := url.PathEscape(name)
 	req, err := http.NewRequest(http.MethodGet, conf.CWURL+"/company/configurations?conditions=name="+"'"+encName+"'", nil)
 	if err != nil {
+		sentry.CaptureException(err)
 		log.Error(err)
 		return nil, err
 	}
@@ -121,15 +130,17 @@ func getCwConfigurationsByName(conf *Cfg, name string) ([]byte, error) {
 	req.Header.Set("clientID", conf.CWCompanyID)
 	resp, err := client.Do(req)
 	if err != nil {
+		sentry.CaptureException(err)
 		log.Fatal(err)
 		return nil, err
 	}
+	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
+		sentry.CaptureException(err)
 		log.Error(err)
 		return nil, err
 	}
-	defer resp.Body.Close()
 	return body, err
 }
 
@@ -138,6 +149,7 @@ func addDeviceToCw(conf *Cfg, data []byte) ([]byte, error) {
 	req, err := http.NewRequest(http.MethodPost, conf.CWURL+"/company/configurations", bytes.NewBuffer(data))
 
 	if err != nil {
+		sentry.CaptureException(err)
 		log.Error(err)
 		return nil, err
 	}
@@ -147,16 +159,18 @@ func addDeviceToCw(conf *Cfg, data []byte) ([]byte, error) {
 	resp, err := client.Do(req)
 
 	if err != nil {
+		sentry.CaptureException(err)
 		log.Error(err)
 		return nil, err
 	}
 
+	defer resp.Body.Close()
 	rbody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
+		sentry.CaptureException(err)
 		log.Error(err)
 		return nil, err
 	}
-	defer resp.Body.Close()
 	return rbody, err
 }
 
@@ -165,6 +179,7 @@ func updateDeviceInCw(conf *Cfg, id string, body []byte) ([]byte, error) {
 	req, err := http.NewRequest(http.MethodPatch, conf.CWURL+"/company/configurations/"+id, bytes.NewBuffer(body))
 
 	if err != nil {
+		sentry.CaptureException(err)
 		log.Error(err)
 		return nil, err
 	}
@@ -174,15 +189,17 @@ func updateDeviceInCw(conf *Cfg, id string, body []byte) ([]byte, error) {
 	resp, err := client.Do(req)
 
 	if err != nil {
+		sentry.CaptureException(err)
 		log.Error(err)
 		return nil, err
 	}
 
+	defer resp.Body.Close()
 	rbody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
+		sentry.CaptureException(err)
 		log.Error(err)
 		return nil, err
 	}
-	defer resp.Body.Close()
 	return rbody, err
 }
