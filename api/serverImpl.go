@@ -7,16 +7,13 @@ import (
 	b64 "encoding/base64"
 	"encoding/hex"
 	"encoding/json"
-	"errors"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
 
-	"github.com/go-chi/render"
 	log "github.com/magna5/go-logger"
 )
 
@@ -45,15 +42,19 @@ type Device struct {
 	CompanyNames []string
 }
 
-func (s *server) GetSyncDevices(w http.ResponseWriter, r *http.Request) {
-
-	err := LM2CW(s.config)
-	if err != nil {
-		render.Render(w, r, ErrServerError(r, errors.New("Error occurred while syncing the devices")))
-	} else {
-		io.WriteString(w, "All devices synchronized successfully")
-	}
-
+// GetSync runs a triggered sync
+func (s *server) GetSync(w http.ResponseWriter, r *http.Request) {
+	go func() {
+		err := LM2CW(s.config)
+		if err != nil {
+			log.Errorf("Error running triggered sync: %v\n", err)
+		} else {
+			log.Info("Triggered sync: All devices synchronized successfully")
+		}
+	}()
+	w.Write([]byte("Device sync has started"))
+	w.WriteHeader(http.StatusAccepted)
+	return
 }
 
 func deviceAuth(conf *Cfg, timestamp int64) string {

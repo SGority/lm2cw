@@ -6,6 +6,7 @@ require (
 	github.com/GeertJohan/go.rice v1.0.2
 	github.com/franela/goblin v0.0.0-20210113153425-413781f5e6c8 // indirect
 	github.com/getkin/kin-openapi v0.20.0
+	github.com/deepmap/oapi-codegen v1.3.8
 	github.com/getsentry/sentry-go v0.7.0
 	github.com/go-chi/chi v4.1.2+incompatible
 	github.com/go-chi/render v1.0.1
