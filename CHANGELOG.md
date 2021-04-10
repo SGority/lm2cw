@@ -1,5 +1,13 @@
 # Changelog
 
+### [1.0.7](https://www.github.com/magna5/lm2cw/compare/v1.0.6...v1.0.7) (2021-04-10)
+
+
+### Bug Fixes
+
+* Correct the last/next/duration metrics ([7acbb6d](https://www.github.com/magna5/lm2cw/commit/7acbb6d34732a8ab7aab3b1fab6786ca5b2e93c7))
+* Prevent sync from stopping on a page if error ([a94fd49](https://www.github.com/magna5/lm2cw/commit/a94fd4951a847df35d5d2a8e0704cbd323fc408c))
+
 ### [1.0.6](https://www.github.com/magna5/lm2cw/compare/v1.0.5...v1.0.6) (2021-04-09)
 
 
