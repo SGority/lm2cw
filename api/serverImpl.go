@@ -425,13 +425,10 @@ func LM2CW(conf *Cfg) error {
 			break
 		}
 
-		err = CWAddUpdate(conf, items)
-		if err != nil {
-			log.Error(err)
-			return err
-		}
+		CWAddUpdate(conf, items)
 
 		page = page + 1
 	}
+	log.Info("Sync run complete")
 	return err
 }
