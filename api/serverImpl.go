@@ -170,7 +170,6 @@ func CWAddUpdate(conf *Cfg, lmres []map[string]interface{}) error {
 
 	var DevDetails DeviceDetails
 	var DevMail Device
-	startTime := time.Now()
 
 	var cwerr error
 	for i := 0; i < len(lmres); i++ {
@@ -251,12 +250,10 @@ func CWAddUpdate(conf *Cfg, lmres []map[string]interface{}) error {
 							_, err := AddOrUpdate(conf, deviceName, compName, CWAttributes, upattr)
 							if err != nil {
 								llog.Error(err)
-								setTimeMetrics("error", startTime, conf)
 								ErrorCounter.Inc()
 								cwerr = err
 								continue
 							}
-							setTimeMetrics("success", startTime, conf)
 							DevicesSynchronizedGauge.WithLabelValues(compName).Inc()
 						} else {
 							llog.Warn("Company not found in Connectwise")
@@ -414,21 +411,33 @@ func LM2CW(conf *Cfg) error {
 	var page int64
 	page = 1
 	var err error
+	var errCount int
+	startTime := time.Now()
+
 	for {
 		items, err := FetchDevices(conf, page)
 		if err != nil {
 			log.Error(err)
-			return err
+			errCount++
+			break
 		}
 
 		if len(items) == 0 {
 			break
 		}
 
-		CWAddUpdate(conf, items)
+		err = CWAddUpdate(conf, items)
+		if err != nil {
+			errCount++
+		}
 
 		page = page + 1
 	}
+	status := "success"
+	if errCount > 0 {
+		status = "error"
+	}
+	setTimeMetrics(status, startTime, conf)
 	log.Info("Sync run complete")
 	return err
 }
