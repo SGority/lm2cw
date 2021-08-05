@@ -12,7 +12,7 @@
 
 - **Contextual, structured logging.** 
   - [zerolog](https://github.com/rs/zerolog)
-  - [go-logger](https://github.com/magna5/go-logger) 
+  - [go-logger](https://github.com/ringsq/go-logger) 
   
 - **Configuration.** 
   - [envdecode](https://github.com/joeshaw/envdecode)  

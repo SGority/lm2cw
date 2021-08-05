@@ -8,7 +8,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	log "github.com/magna5/go-logger"
+	log "github.com/ringsq/go-logger"
 
 	"github.com/magna5/lm2cw/api"
 )

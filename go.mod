@@ -3,10 +3,8 @@ module github.com/magna5/lm2cw
 go 1.13
 
 require (
-	github.com/GeertJohan/go.rice v1.0.2
 	github.com/franela/goblin v0.0.0-20210113153425-413781f5e6c8 // indirect
 	github.com/getkin/kin-openapi v0.20.0
-	github.com/deepmap/oapi-codegen v1.3.8
 	github.com/getsentry/sentry-go v0.7.0
 	github.com/go-chi/chi v4.1.2+incompatible
 	github.com/go-chi/render v1.0.1
@@ -17,10 +15,10 @@ require (
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/kr/pretty v0.2.0 // indirect
 	github.com/magna5/embedded.template v0.0.0-20210105193638-13ae4a2a2ef5
-	github.com/magna5/go-logger v1.99.0
 	github.com/magna5/godotenv v1.3.1
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/prometheus/client_golang v1.7.1
+	github.com/ringsq/go-logger v1.99.2
 	github.com/rs/cors v1.7.0
 	github.com/rs/zerolog v1.15.0
 	github.com/sirupsen/logrus v1.5.0 // indirect

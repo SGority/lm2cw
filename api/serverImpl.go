@@ -15,7 +15,7 @@ import (
 	"time"
 
 	sentry "github.com/getsentry/sentry-go"
-	log "github.com/magna5/go-logger"
+	log "github.com/ringsq/go-logger"
 )
 
 // func (s *server) ReadUser(w http.ResponseWriter, r *http.Request) {

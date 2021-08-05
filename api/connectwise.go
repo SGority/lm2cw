@@ -11,7 +11,7 @@ import (
 
 	"github.com/getsentry/sentry-go"
 
-	log "github.com/magna5/go-logger"
+	log "github.com/ringsq/go-logger"
 )
 
 //CWType struct
