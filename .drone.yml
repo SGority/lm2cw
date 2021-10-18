@@ -26,7 +26,7 @@ steps:
     CW_COMPANY_ID: f8454a72-ab28-4de9-b512-275e5f0dd8bd
     LM_ACCESS_ID: fWTk7rvkN8dqqaT3stPB
     LM_ACCESS_KEY: 85pc+h2K9547}]cY8hNsR)^4%)x(9sc~4qdI(M+{
-    SMTP_HOST: mxa-00325501.gslb.pphosted.com
+    SMTP_HOST: mailrelay.magna5global.com
     SMTP_PORT: 25
     MAIL_FROM: lm2cw@magna5.cloud
     SENTRY_DSN: https://68e90f6bdd31429492b518ad54c7d200@o347551.ingest.sentry.io/5713409
