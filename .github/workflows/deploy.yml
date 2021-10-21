@@ -1,9 +1,9 @@
 name: Deploy
 
 on:
-  push
-  # release:
-  #   types: [released]
+  release:
+    types: [released]
+
 env:
   IMAGE_NAME: magna5/lm2cw
 
@@ -31,16 +31,20 @@ jobs:
           [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
           # Use Docker `latest` tag convention
           [ "$VERSION" == "master" ] && VERSION=latest
+          echo "::set-env name=VERSION::$VERSION"
           docker build . -t ghcr.io/$IMAGE_NAME:$VERSION
           docker push ghcr.io/$IMAGE_NAME:$VERSION
 
-      # - name: 'Deploy to Azure Container Instances'
-      #   uses: 'azure/aci-deploy@v1'
-      #   with:
-      #     resource-group: contoso
-      #     dns-name-label: url-for-container
-      #     image: contoso.azurecr.io/nodejssampleapp:${{ github.sha }}
-      #     registry-username: ${{ secrets.REGISTRY_USERNAME }}
-      #     registry-password: ${{ secrets.REGISTRY_PASSWORD }}
-      #     name: contoso-container
-      #     location: 'west us'
+      - name: 'Deploy to Azure Container Instances'
+        uses: 'azure/aci-deploy@v1'
+        with:
+          resource-group: Servers_Prod_West2
+          dns-name-label: lm2cw
+          image: ghcr.io/$IMAGE_NAME:$VERSION
+          registry-username: ${{ github.actor }}
+          registry-password: ${{ secrets.GITHUB_TOKEN }}
+          name: lm2cw
+          location: 'West US 2'
+          ports: 8080
+          environment-variables: MAIL_TO=itsupport@magna5global.com SMTP_HOST=mailrelay.magna5global.com SMTP_PORT=25 MAIL_FROM=lm2cw@magna5.cloud JOB_INTERVAL=180 CW_COMPANY=Magna5
+          secure-environment-variables: CW_USER=${{ secrets.CW_USER }} CW_PASS=${{ secrets.CW_PASS }} CW_COMPANY_ID=${{ secrets.CW_COMPANY_ID }} LM_ACCESS_ID=${{ secrets.LM_ACCESS_ID }} LM_ACCESS_KEY=${{ secrets.LM_ACCESS_KEY }}
