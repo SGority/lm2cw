@@ -31,7 +31,7 @@ jobs:
           [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
           # Use Docker `latest` tag convention
           [ "$VERSION" == "master" ] && VERSION=latest
-          echo "::set-env name=VERSION::$VERSION"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
           docker build . -t ghcr.io/$IMAGE_NAME:$VERSION
           docker push ghcr.io/$IMAGE_NAME:$VERSION
 
@@ -40,7 +40,7 @@ jobs:
         with:
           resource-group: Servers_Prod_West2
           dns-name-label: lm2cw
-          image: ghcr.io/$IMAGE_NAME:$VERSION
+          image: ghcr.io/$IMAGE_NAME:${{ env.VERSION }}
           registry-username: ${{ github.actor }}
           registry-password: ${{ secrets.GITHUB_TOKEN }}
           name: lm2cw
