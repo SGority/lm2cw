@@ -41,6 +41,7 @@ jobs:
           resource-group: Servers_Prod_West2
           dns-name-label: lm2cw
           image: ghcr.io/$IMAGE_NAME:${{ env.VERSION }}
+          registry-login-server: ghcr.io
           registry-username: ${{ github.actor }}
           registry-password: ${{ secrets.GITHUB_TOKEN }}
           name: lm2cw
