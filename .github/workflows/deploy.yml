@@ -5,7 +5,7 @@ on:
   # release:
   #   types: [released]
 env:
-  IMAGE_NAME: lm2cw
+  IMAGE_NAME: magna5/lm2cw
 
 jobs:
     deploy:
@@ -26,8 +26,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - run: |
-          docker build . -t ghcr.io/$IMAGE_NAME:${{ github.ref }}
-          docker push ghcr.io/$IMAGE_NAME:${{ github.ref }}
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "master" ] && VERSION=latest
+          docker build . -t ghcr.io/$IMAGE_NAME:$VERSION
+          docker push ghcr.io/$IMAGE_NAME:$VERSION
 
       # - name: 'Deploy to Azure Container Instances'
       #   uses: 'azure/aci-deploy@v1'
