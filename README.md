@@ -12,6 +12,10 @@ This service is responsible for adding/synchronizing devices in LogicMonitor to 
 
 ---
 
+## Deployment Pipeline
+
+This application is deployed to an Azure Container Instance via Github Actions.  The action that performs this is found in .github/workflows/deploy.yml.  The deployment action is run anytime a `release` is created in Github.  The tag for the release should follow symantec versioning.  The environment variables that configure the deployment can be found in the deploy.yml file.  The secrets can be updated in `settings` for the repo (and the org settings).
+
 # Documentation
 
 * [Overview](docs/README.md)
